@@ -33,7 +33,8 @@ if st.session_state.img_flask_api_url:
     st.success(f"Backend is set to: {st.session_state.img_flask_api_url}")
 
 # TODO 1: Upload File
-uploaded_file = None
+# uploaded_file = None
+uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
 # Display the uploaded image with width 400
 if uploaded_file is not None:
@@ -51,7 +52,8 @@ if user_prompt and uploaded_file and button:
     data = {'prompt': user_prompt}
     
     # TODO 3: Send promt and image to server
-    response = None
+    # response = None
+    response = requests.post(st.session_state.img_flask_api_url, files=files, data=data)
     
     # Check if the request was successful
     if response.status_code == 200:
@@ -60,7 +62,8 @@ if user_prompt and uploaded_file and button:
         generated_caption = api_response.get("response", "No caption received.")
         
         # TODO 4: Display the generated caption with enhanced formatting
-        
+        st.markdown(f"### Generated Caption:")
+        st.write(generated_caption)
         
     else:
         st.error(f"Error: {response.status_code}")
