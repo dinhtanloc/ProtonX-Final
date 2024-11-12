@@ -59,6 +59,7 @@ if user_prompt and uploaded_file and button:
     if response.status_code == 200:
         # Get the response from the API
         api_response = response.json()
+        print(api_response)
         generated_caption = api_response.get("response", "No caption received.")
         
         # TODO 4: Display the generated caption with enhanced formatting
