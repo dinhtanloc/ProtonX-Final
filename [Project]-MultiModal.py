@@ -1,6 +1,8 @@
 import streamlit as st
 import requests
 import uuid
+from PIL import Image
+from io import BytesIO
 
 st.title("Multimodal Caption Generator")
 
@@ -61,10 +63,13 @@ if user_prompt and uploaded_file and button:
         api_response = response.json()
         print(api_response)
         generated_caption = api_response.get("response", "No caption received.")
+        gif_data = BytesIO(response.content)
+        gif_image = Image.open(gif_data)
         
         # TODO 4: Display the generated caption with enhanced formatting
         st.markdown(f"### Generated Caption:")
         st.write(generated_caption)
+        st.image(gif_image, width=400)
         
     else:
         st.error(f"Error: {response.status_code}")
