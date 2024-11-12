@@ -21,7 +21,7 @@ def setup_backend():
     )
     link = st.text_input("Backend URL", "")
     if st.button("Save"):
-        st.session_state.img_flask_api_url = "{}/caption".format(link)  # Update ngrok URL
+        st.session_state.img_flask_api_url = "{}/generate_video".format(link)  # Update ngrok URL
         st.rerun()  # Re-run the app to close the dialog
 
 # Display the setup option if the URL is not set
@@ -53,7 +53,7 @@ if user_prompt and uploaded_file and button:
     
     # TODO 3: Send promt and image to server
     # response = None
-    response = requests.post(st.session_state.img_flask_api_url, files=files, data=data)
+    response = requests.post(st.session_state.img_flask_api_url, files=files, data=data, timeout=600)
     
     # Check if the request was successful
     if response.status_code == 200:
