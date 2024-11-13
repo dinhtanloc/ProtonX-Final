@@ -54,22 +54,34 @@ if user_prompt and uploaded_file and button:
     data = {'prompt': user_prompt}
     
     # TODO 3: Send promt and image to server
-    # response = None
-    response = requests.post(st.session_state.img_flask_api_url, files=files, data=data, timeout=600)
+    # # response = None
+    # response = requests.post(st.session_state.img_flask_api_url, files=files, data=data, timeout=600)
+    # # if uploaded_file and user_prompt:
+    # # if uploaded_file:
+    # #     response = requests.post(st.session_state.img_flask_api_url, files=files, timeout=600)
+    # # response = requests.post(st.session_state.img_flask_api_url, data=data, timeout=600)
+
+
     
-    # Check if the request was successful
-    if response.status_code == 200:
-        # Get the response from the API
-        api_response = response.json()
-        print(api_response)
-        generated_caption = api_response.get("response", "No caption received.")
-        gif_data = BytesIO(response.content)
-        gif_image = Image.open(gif_data)
-        
-        # TODO 4: Display the generated caption with enhanced formatting
-        st.markdown(f"### Generated Caption:")
-        st.write(generated_caption)
-        st.image(gif_image, width=400)
-        
-    else:
-        st.error(f"Error: {response.status_code}")
+    try:
+        # Send the request to the backend
+        response = requests.post(st.session_state.img_flask_api_url, files=files, data=data, timeout=600)
+
+        # Check if the request was successful
+        if response.status_code == 200:
+            api_response = response.json()
+            generated_caption = api_response.get("response", "No caption received.")
+            
+            # Load GIF data if it's present
+            gif_data = BytesIO(response.content)
+            gif_image = Image.open(gif_data)
+            
+            # Display caption and generated image
+            st.markdown(f"### Generated Caption:")
+            st.write(generated_caption)
+            st.image(gif_image, width=400)
+        else:
+            st.error(f"Error: {response.status_code} - {response.text}")
+    except Exception as e:
+        st.error(f"Exception occurred: {str(e)}")
+
